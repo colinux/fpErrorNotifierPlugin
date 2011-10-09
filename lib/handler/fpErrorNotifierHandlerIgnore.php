@@ -54,7 +54,7 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
    */
   public function handleException(Exception $e)
   {
-    if ($this->ignoreException($e) || $this->ignoreError($e) || $this->ignoreDuplication($e)) return;
+    //if ($this->ignoreException($e) || $this->ignoreError($e) || $this->ignoreDuplication($e)) return;
 
     $this->registerExceptionAsKnown($e);
     
