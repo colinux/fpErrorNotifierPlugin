@@ -29,7 +29,7 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
   public function initialize()
   { 
     // Prevent blocking of error reporting, becuse of @ - error-control operator.
-    if ($this->options['ignore_@'] && 0 == error_reporting()) @error_reporting(-2);
+    if ($this->options['ignore_@'] && 0 == error_reporting()) error_reporting(-2);
     
     return parent::initialize();
   }

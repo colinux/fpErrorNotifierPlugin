@@ -41,7 +41,7 @@ class fpErrorNotifierHandler
    *
    * @return void
    */
-  public function __construct(sfEventDispatcher $dispatcher, array $options = array())
+  public function __construct(sfEventDispatcher $dispatcher = null, array $options = array())
   {
     $this->dispatcher = $dispatcher;
     $this->options = array_merge($this->options, $options);
@@ -142,7 +142,7 @@ class fpErrorNotifierHandler
    * @param $errfile string
    * @param $errline string
    *
-   * @return ErrorException
+   * @return bool
    */
   public function handleError($errno, $errstr, $errfile, $errline)
   {
@@ -152,20 +152,16 @@ class fpErrorNotifierHandler
 
   /**
    *
-   * @return void
+   * @return bool
    */
   public function handleFatalError()
   {
     $this->freeMemory();
-    
     $error = error_get_last();
     $error = array_merge(array('type' => null, 'message' => null, 'file' => null, 'line' => null), (array)$error);
-    
-    $skipHandling = !$error || !isset($error['type']) || !in_array($error['type'], fpErrorNotifierErrorCode::getFatals());
-    if ($skipHandling) return;
-    
+    if (!in_array($error['type'], fpErrorNotifierErrorCode::getFatals())) return false;
     $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
-  
+    return true;
   }
 
   /**
