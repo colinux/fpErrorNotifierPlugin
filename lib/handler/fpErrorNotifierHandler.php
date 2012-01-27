@@ -40,7 +40,7 @@ class fpErrorNotifierHandler
    *
    * @return void
    */
-  public function __construct(sfEventDispatcher $dispatcher, array $options = array())
+  public function __construct(sfEventDispatcher $dispatcher = null, array $options = array())
   {
     $this->dispatcher = $dispatcher;
     $this->options = array_merge($this->options, $options);
@@ -62,10 +62,12 @@ class fpErrorNotifierHandler
     // It will not do nothing if fpErrorNotifierDriverNull did set. Correctly error will not display.
     // See first line of method 
     set_exception_handler(array($this, 'handleException'));
-    $dispather = $this->notifier()->dispather();
-    $dispather->connect('application.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.send_message', array($this, 'handleEventMessage'));
+    if ($dispather = $this->notifier()->dispather())
+    {
+      $dispather->connect('application.throw_exception', array($this, 'handleEvent'));
+      $dispather->connect('notify.throw_exception', array($this, 'handleEvent'));
+      $dispather->connect('notify.send_message', array($this, 'handleEventMessage'));
+    }
     $this->isInit = true;
   }
 
@@ -103,7 +105,7 @@ class fpErrorNotifierHandler
       }
     }
     $message->addSection('Server', $this->notifier()->helper()->formatServer());
-    $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_exception'));
+    if (!empty($this->dispatcher)) $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_exception'));
     $this->notifier()->driver()->notify($message);
   }
 
@@ -112,7 +114,7 @@ class fpErrorNotifierHandler
     $message = $this->notifier()->decoratedMessage($event->getSubject());
     $message->addSection('Message Details', $event->getParameters());
     $message->addSection('Server', $this->notifier()->helper()->formatServer());
-    $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_message'));
+    if (!empty($this->dispatcher)) $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_message'));
     $this->notifier()->driver()->notify($message);
   }
 
