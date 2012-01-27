@@ -50,7 +50,7 @@ class fpErrorNotifier
    * 
    * @return void
    */
-  public function __construct(sfEventDispatcher $dispather)
+  public function __construct(sfEventDispatcher $dispather = null)
   {
     $this->dispather = $dispather;
   }

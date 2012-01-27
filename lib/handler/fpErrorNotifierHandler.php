@@ -57,26 +57,25 @@ class fpErrorNotifierHandler
     $configs = sfConfig::get('sf_notify_driver');
     
     $this->memoryReserv = str_repeat('x', 1024 * 500);
-    
-    // Register error handler it will process the most part of erros (but not all)
+    // Registers error handler and it will process the most part of erros (but not all)
     set_error_handler(array($this, 'handleError'));
-    // Register shutdown handler it will process the rest part of errors
+    // Registers shutdown handler and it will process the rest part of errors
     register_shutdown_function(array($this, 'handleFatalError'));
-    // It will not do nothing if fpErrorNotifierDriverNull did set. Correctly error will not display.
+    // It will do nothing if fpErrorNotifierDriverNull was set as a driver. Correctly error will not display.
     // See first line of method 
     set_exception_handler(array($this, 'handleException'));
-    
-    $dispather = $this->notifier()->dispather();
-    $dispather->connect('application.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.throw_exception', array($this, 'handleEvent'));
-    $dispather->connect('notify.send_message', array($this, 'handleEventMessage'));
-    
+    if ($dispather = $this->notifier()->dispather())
+    {
+      $dispather->connect('application.throw_exception', array($this, 'handleEvent'));
+      $dispather->connect('notify.throw_exception', array($this, 'handleEvent'));
+      $dispather->connect('notify.send_message', array($this, 'handleEventMessage'));
+    }
     $this->isInit = true;
   }
 
   /**
    *
-   * @param $event sfEvent
+   * @param sfEvent $event
    *
    * @return void
    */
@@ -87,9 +86,10 @@ class fpErrorNotifierHandler
 
   /**
    * Exception handler method
-   *
+   * 
    * @todo Implement display exception mechanism
-   * @param $e Exception
+   *
+   * @param Exception $e
    *
    * @return void
    */
@@ -113,12 +113,17 @@ class fpErrorNotifierHandler
     }
     
     $message->addSection('Server', $this->notifier()->helper()->formatServer());
-    
-    $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_exception'));
-    
+    if (!empty($this->dispatcher)) $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_exception'));
     $this->notifier()->driver()->notify($message);
   }
 
+  /**
+   * 
+   *
+   * @param sfEvent $event
+   *
+   * @return
+   */
   public function handleEventMessage(sfEvent $event)
   {
     $message = $this->notifier() ->decoratedMessage($event->getSubject());
@@ -142,7 +147,6 @@ class fpErrorNotifierHandler
   public function handleError($errno, $errstr, $errfile, $errline)
   {
     $this->handleException(new ErrorException($errstr, 0, $errno, $errfile, $errline));
-    
     return false;
   }
 
