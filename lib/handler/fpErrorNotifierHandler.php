@@ -55,11 +55,11 @@ class fpErrorNotifierHandler
     if ($this->isInit || 'fpErrorNotifierDriverNull' == get_class($this->notifier()->driver())) return;
     $configs = sfConfig::get('sf_notify_driver');
     $this->memoryReserv = str_repeat('x', 1024 * 500);
-    // Register error handler it will process the most part of erros (but not all)
+    // Registers error handler and it will process the most part of erros (but not all)
     set_error_handler(array($this, 'handleError'));
-    // Register shutdown handler it will process the rest part of errors
+    // Registers shutdown handler and it will process the rest part of errors
     register_shutdown_function(array($this, 'handleFatalError'));
-    // It will not do nothing if fpErrorNotifierDriverNull did set. Correctly error will not display.
+    // It will do nothing if fpErrorNotifierDriverNull was set as a driver. Correctly error will not display.
     // See first line of method 
     set_exception_handler(array($this, 'handleException'));
     if ($dispather = $this->notifier()->dispather())
@@ -109,6 +109,13 @@ class fpErrorNotifierHandler
     $this->notifier()->driver()->notify($message);
   }
 
+  /**
+   * 
+   *
+   * @param sfEvent $event
+   *
+   * @return
+   */
   public function handleEventMessage(sfEvent $event)
   {
     $message = $this->notifier()->decoratedMessage($event->getSubject());
