@@ -121,7 +121,9 @@ class fpErrorNotifierHandlerIgnore extends fpErrorNotifierHandler
    */
   protected function getExceptionRegister()
   {
-    $cacheDir = sfConfig::get('sf_cache_dir') ? sfConfig::get('sf_cache_dir') : sfProjectConfiguration::guessRootDir().'/cache';
+    $cacheDir = sfConfig::get('sf_cache_dir')?
+                  sfConfig::get('sf_cache_dir'):
+                  realpath(dirname(__FILE__) . '/../../../cache');
     $cacheDir .= '/fpErrorNotifierPlugin';
     
     return new sfFileCache(array('cache_dir' => $cacheDir));

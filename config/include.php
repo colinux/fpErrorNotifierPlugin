@@ -33,7 +33,12 @@ require_once $pluginLibDir . '/util/fpErrorNotifierErrorCode.php';
 
 // connected
 if ($path = sfConfig::get('sf_symfony_lib_dir')) {
+  require_once $path . '/cache/sfCache.class.php';
+  require_once $path . '/cache/sfFileCache.class.php';
   require_once $path . '/exception/sfException.class.php';
+  require_once $path . '/exception/sfInitializationException.class.php';
+  require_once $path . '/exception/sfCacheException.class.php';
   require_once $path . '/debug/sfDebug.class.php';
   require_once $path . '/yaml/sfYamlDumper.php';
+  require_once $path . '/util/sfToolkit.class.php';
 }
