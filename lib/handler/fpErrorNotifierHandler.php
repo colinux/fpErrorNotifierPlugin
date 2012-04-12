@@ -107,7 +107,7 @@ class fpErrorNotifierHandler
         $message->addSection("Previous Exception #{$count}", $this->notifier()->helper()->formatException($previous));
         
         $e = $previous;
-        if (!is_callable(array($e, "getPrevious"))) breack;
+        if (!is_callable(array($e, "getPrevious"))) break;
         $count++;
       }
     }
