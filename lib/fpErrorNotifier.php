@@ -111,8 +111,23 @@ class fpErrorNotifier
       $class = $options['class'];
       $this->driver = new $class($options['options']);
     }
-    
-    return $this->driver; 
+
+    return $this->driver;
+  }
+
+
+  /**
+   *
+   * Reset the driver instance.
+   * Necessary with tasks/workers: the notifier is loaded before
+   * the env is set, so the options loaded are the default options.
+   *
+   * By resetting the driver, after manually erasing sf_notify_driver
+   * with the expected options, this will load the appropriate
+   * driver.
+   */
+  public function resetDriver() {
+    $this->driver = null;
   }
   
   /**
