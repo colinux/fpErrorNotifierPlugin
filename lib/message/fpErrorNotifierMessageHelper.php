@@ -53,7 +53,12 @@ class fpErrorNotifierMessageHelper
    */
   public function formatServer()
   {
-    return array('server' => $this->dump($_SERVER), 'session' => isset($_SESSION)?$this->dump($_SESSION):null);
+    return array(
+      'server'  => $this->dump($_SERVER),
+      'session' => isset($_SESSION) ? $this->dump($_SESSION) : null,
+      'post'    => isset($_POST)    ? $this->dump($_POST)    : null,
+      'ccookie' => isset($_COOKIE)  ? $this->dump($_COOKIE)  : null,
+    );
   }
 
   /**
