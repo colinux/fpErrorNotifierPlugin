@@ -31,7 +31,7 @@ class fpErrorNotifierDriverFile extends fpBaseErrorNotifierDriver
   public function notify(fpBaseErrorNotifierMessage $message)
   {    
     $path = $this->getOption('path');
-    file_exists($path) && unlink($path);
+    file_exists($path) and unlink($path);
 
     $data = "
       Content-type: {$message->format()}
