@@ -102,6 +102,30 @@ class fpErrorNotifierMessageHelper
     );
   }
 
+
+  /**
+   *
+   * @return array
+   */
+  public function formatRequest()
+  {
+    $request = sfContext::hasInstance() ? sfContext::getInstance()->getRequest() : null;
+
+    if ($request !== null) {
+      $request = sfDebug::requestAsArray($request);
+
+      $array = array();
+      foreach ($request as $name => $data) {
+        $array[$name] = $this->dump($data);
+      }
+
+      return $array;
+    }
+
+    return null;
+  }
+
+
   /**
    * 
    * @return string

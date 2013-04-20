@@ -113,6 +113,11 @@ class fpErrorNotifierHandler
     }
     
     $message->addSection('Server', $this->notifier()->helper()->formatServer());
+
+    if ($request = $this->notifier()->helper()->formatRequest()) {
+      $message->addSection('Request', $request);
+    }
+
     if (!empty($this->dispatcher)) $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_exception'));
     $this->notifier()->driver()->notify($message);
   }
@@ -129,7 +134,11 @@ class fpErrorNotifierHandler
     $message = $this->notifier() ->decoratedMessage($event->getSubject());
     $message->addSection('Message Details', $event->getParameters());
     $message->addSection('Server', $this->notifier()->helper()->formatServer());
-    
+
+    if ($request = $this->notifier()->helper()->formatRequest()) {
+      $message->addSection('Request', $request);
+    }
+
     $this->dispatcher->notify(new sfEvent($message, 'notify.decorate_message'));
     
     $this->notifier()->driver()->notify($message);
